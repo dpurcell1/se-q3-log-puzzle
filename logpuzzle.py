@@ -26,8 +26,38 @@ def read_urls(filename):
     extracting the hostname from the filename itself, sorting
     alphabetically in increasing order, and screening out duplicates.
     """
-    # +++your code here+++
-    pass
+    # Define regex patterns for searching file for urls
+    puzzle_regex = re.compile(r'(\S+puzzle\S+)')
+    char_regex = re.compile(r'(\S+puzzle/p-)(\w{4})-(\w{4})')
+    # initialize urls list
+    urls = []
+    # open file to be read/searched
+    with open(filename, 'r') as f:
+        # set server string variable
+        server = 'http://code.google.com'
+        # search file line-by-line
+        for line in f:
+            # check each line against each regex pattern
+            puzzle_match = re.search(puzzle_regex, line)
+            char_match = re.search(char_regex, line)
+            # handle matching of "letters-moreletters" pattern
+            if char_match:
+                # define sort key pattern for urls
+                sort_key = char_match.group(3)
+                # append sort key to beginning of url
+                full_url = sort_key + server + puzzle_match.group(1)
+                # create key-sortable url list
+                if full_url not in urls:
+                    urls.append(full_url)
+            # use default criteria for url list creation
+            elif puzzle_match:
+                pattern = puzzle_match.group(1)
+                full_url = server + pattern
+                if full_url not in urls:
+                    urls.append(full_url)
+    # sort and return list of urls
+    urls.sort()
+    return urls
 
 
 def download_images(img_urls, dest_dir):
@@ -38,8 +68,45 @@ def download_images(img_urls, dest_dir):
     to show each local image file.
     Creates the directory if necessary.
     """
-    # +++your code here+++
-    pass
+    # define count variable for image filenames
+    count = 0
+    # create and switch to destination dir
+    if not os.path.exists(dest_dir):
+        os.makedirs(dest_dir)
+        os.chdir(dest_dir)
+    # simply switch to dir if it already exists
+    else:
+        os.chdir(dest_dir)
+    # checks first letter of first url list item for key character
+    if img_urls[0][0] == 'b':
+        urls = []
+        # strips key pattern from each url
+        for url in img_urls:
+            url = url[4:]
+            urls.append(url)
+        # Downloads each image via url and assigns filename
+        for img in urls:
+            print(f'Downloading image {count}...')
+            urllib.request.urlretrieve(img, f'img{count}.jpg')
+            count += 1
+        # creates html file with stacked image tags to display in browser
+            with open('index.html', 'w') as f:
+                f.write('<html>\n<body>\n')
+                for url in urls:
+                    f.write(f'<img src ={url}>')
+                f.write('\n</body>\n</html>\n')
+    # same behavior as above minus key stripping from urls
+    else:
+        for url in img_urls:
+            print(f'Downloading image {count}...')
+            urllib.request.urlretrieve(url, f'img{count}.jpg')
+            count += 1
+
+            with open('index.html', 'w') as f:
+                f.write('<html>\n<body>\n')
+                for url in img_urls:
+                    f.write(f'<img src ={url}>')
+                f.write('\n</body>\n</html>\n')
 
 
 def create_parser():
