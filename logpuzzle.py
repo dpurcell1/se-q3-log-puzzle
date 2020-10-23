@@ -90,11 +90,11 @@ def download_images(img_urls, dest_dir):
             urllib.request.urlretrieve(img, f'img{count}.jpg')
             count += 1
         # creates html file with stacked image tags to display in browser
-            with open('index.html', 'w') as f:
-                f.write('<html>\n<body>\n')
-                for url in urls:
-                    f.write(f'<img src ={url}>')
-                f.write('\n</body>\n</html>\n')
+        with open('index.html', 'w') as f:
+            f.write('<html>\n<body>\n')
+            for num in range(count):
+                f.write(f'<img src =img{num}.jpg>')
+            f.write('\n</body>\n</html>\n')
     # same behavior as above minus key stripping from urls
     else:
         for url in img_urls:
@@ -102,11 +102,11 @@ def download_images(img_urls, dest_dir):
             urllib.request.urlretrieve(url, f'img{count}.jpg')
             count += 1
 
-            with open('index.html', 'w') as f:
-                f.write('<html>\n<body>\n')
-                for url in img_urls:
-                    f.write(f'<img src ={url}>')
-                f.write('\n</body>\n</html>\n')
+        with open('index.html', 'w') as f:
+            f.write('<html>\n<body>\n')
+            for num in range(count):
+                f.write(f'<img src =img{num}.jpg>')
+            f.write('\n</body>\n</html>\n')
 
 
 def create_parser():
