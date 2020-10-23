@@ -34,7 +34,9 @@ def read_urls(filename):
     # open file to be read/searched
     with open(filename, 'r') as f:
         # set server string variable
-        server = 'http://code.google.com'
+        server_regex = re.compile(r'(_)(\S+)')
+        server_match = re.search(server_regex, filename)
+        server = 'http://' + server_match.group(2)
         # search file line-by-line
         for line in f:
             # check each line against each regex pattern
